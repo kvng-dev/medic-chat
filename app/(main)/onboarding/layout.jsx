@@ -27,7 +27,7 @@ const OnboardingLayout = async ({ children }) => {
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-10">
           <h1 className="text-3xl md:text-4xl gradient-title mb-2">
-            Welcome to MediChat
+            Welcome to MediChat!
           </h1>
           <p className="text-lg text-muted-foreground">
             Tell us how you want to use the platform
