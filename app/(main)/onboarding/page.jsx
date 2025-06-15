@@ -120,7 +120,7 @@ const OnboardingPage = () => {
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Processing
+                  Processing...
                 </>
               ) : (
                 " Continue as a Patient"

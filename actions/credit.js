@@ -95,3 +95,69 @@ export async function checkAndAllocateCredits(user) {
     return null;
   }
 }
+
+export async function deductCreditsForAppointment(userId, doctorId) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    const doctor = await prisma.user.findUnique({
+      where: { id: doctorId },
+    });
+
+    if (user.credits < APPOINTMENT_CREDIT_COST) {
+      throw new Error("Insufficient credits to book an appointnent");
+    }
+
+    if (!doctor) {
+      throw new Error("Doctor not found");
+    }
+
+    const result = await prisma.$transaction(async (tx) => {
+      await tx.creditTransaction.create({
+        data: {
+          userId: user.id,
+          amount: -APPOINTMENT_CREDIT_COST,
+          type: "APPOINTMENT_DEDUCTION",
+        },
+      });
+
+      await tx.creditTransaction.create({
+        data: {
+          userId: doctor.id,
+          amount: APPOINTMENT_CREDIT_COST,
+          type: "APPOINTMENT_DEDUCTION",
+        },
+      });
+
+      const updatedUser = await tx.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          credits: {
+            decrement: APPOINTMENT_CREDIT_COST,
+          },
+        },
+      });
+
+      await tx.user.update({
+        where: {
+          id: doctor.id,
+        },
+        data: {
+          credits: {
+            increment: APPOINTMENT_CREDIT_COST,
+          },
+        },
+      });
+
+      return updatedUser;
+    });
+
+    return { success: true, user: result };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
