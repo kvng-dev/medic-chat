@@ -32,7 +32,7 @@ const DoctorAppointmentList = ({ appointments }) => {
                 No upcoming appointmnents
               </h3>
               <p className="text-shadow-muted">
-                You&apos;t have any scheduled appointments yet. Make sure
+                You don&apos;t have any scheduled appointments yet. Make sure
                 you&apos;ve set your availability to allow patients to book
               </p>
             </div>

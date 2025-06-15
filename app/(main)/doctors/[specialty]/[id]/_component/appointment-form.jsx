@@ -38,6 +38,8 @@ const AppointmentForm = ({ doctorId, slot, onBack, onComplete }) => {
         toast.success("Appointment booked successfully!");
         onComplete();
       }
+    } else if (data?.error) {
+      toast.error(error.message);
     }
   }, [data]);
 
